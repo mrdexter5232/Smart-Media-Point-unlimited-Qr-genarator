@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Media Point Unlimited QR Generator</title>
+    <meta name="description" content="Generate unlimited customizable QR codes instantly with Smart Media Point Unlimited QR Generator. Choose colors, sizes, and download in PNG, JPG, SVG, or PDF.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            transition: background 0.3s;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 450px;
+            transition: all 0.3s;
+        }
+        .logo {
+            width: 100px;
+            margin-bottom: 15px;
+        }
+        h2 {
+            margin-bottom: 15px;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+        }
+        input, select {
+            border: 1px solid #ccc;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+        #qrcode {
+            margin-top: 20px;
+            padding: 10px;
+            background: white;
+            border-radius: 10px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <img src="Leonardo_Phoenix_10_Design_a_modern_professional_logo_for_Comp_0.jpg" alt="Smart Media Point Logo" class="logo">
+        <h2><i class="fas fa-qrcode"></i> Smart Media Point Unlimited QR Generator</h2>
+        <input type="text" id="qrText" placeholder="Enter text or URL">
+        <label for="qrSize">QR Code Size:</label>
+        <select id="qrSize">
+            <option value="150">Small</option>
+            <option value="200" selected>Medium</option>
+            <option value="300">Large</option>
+        </select>
+        <label for="qrColor">QR Code Color:</label>
+        <input type="color" id="qrColor" value="#000000">
+        <label for="bgColor">Background Color:</label>
+        <input type="color" id="bgColor" value="#ffffff">
+        <label for="qrError">Error Correction:</label>
+        <select id="qrError">
+            <option value="L">Low</option>
+            <option value="M" selected>Medium</option>
+            <option value="Q">Quartile</option>
+            <option value="H">High</option>
+        </select>
+        <button id="generateBtn">Generate QR Code</button>
+        <div id="qrcode"></div>
+        <button id="downloadPng" style="display: none;">Download PNG</button>
+        <button id="downloadJpg" style="display: none;">Download JPG</button>
+        <button id="downloadSvg" style="display: none;">Download SVG</button>
+        <button id="downloadPdf" style="display: none;">Download PDF</button>
+    </div>
+    
+    <script>
+        let qrCanvas;
+        document.getElementById("generateBtn").addEventListener("click", function() {
+            const qrText = document.getElementById("qrText").value.trim();
+            const qrSize = parseInt(document.getElementById("qrSize").value);
+            const qrColor = document.getElementById("qrColor").value;
+            const bgColor = document.getElementById("bgColor").value;
+            const qrError = document.getElementById("qrError").value;
+            
+            if (qrText === "") {
+                alert("Please enter a valid URL or text");
+                return;
+            }
+            
+            const qrContainer = document.getElementById("qrcode");
+            qrContainer.innerHTML = "";
+            
+            let qrDiv = document.createElement("div");
+            qrContainer.appendChild(qrDiv);
+            
+            let qr = new QRCode(qrDiv, {
+                text: qrText,
+                width: qrSize,
+                height: qrSize,
+                colorDark: qrColor,
+                colorLight: bgColor,
+                correctLevel: QRCode.CorrectLevel[qrError]
+            });
+            
+            setTimeout(() => {
+                qrCanvas = qrDiv.querySelector("canvas");
+                document.getElementById("downloadPng").style.display = "block";
+                document.getElementById("downloadJpg").style.display = "block";
+            }, 500);
+        });
+        
+        function downloadImage(format) {
+            if (!qrCanvas) {
+                alert("Generate a QR Code first");
+                return;
+            }
+            let link = document.createElement("a");
+            link.href = qrCanvas.toDataURL(`image/${format}`);
+            link.download = `QRCode.${format}`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        document.getElementById("downloadPng").addEventListener("click", function() {
+            downloadImage("png");
+        });
+        
+        document.getElementById("downloadJpg").addEventListener("click", function() {
+            downloadImage("jpeg");
+        });
+    </script>
+</body>
+</html>
